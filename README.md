@@ -75,17 +75,9 @@ Renamed columns for better readability (e.g., Projected_Openings_2030).
 
 import pandas as pd
 
-df = pd.read_csv("ai_job_trends_dataset.csv")
-
-# Check info
 df.info()
 
-# Handle missing values
-df['Salary'] = df['Salary'].fillna(df['Salary'].median())
-df['Automation_Risk'] = df['Automation_Risk'].fillna(df['Automation_Risk'].median())
-
-# Clean column names
-df.columns = df.columns.str.strip().str.replace(' ', '_')
+# Handle missing values, # Clean column names
 
 📊 2. Feature Engineering
 
@@ -101,92 +93,29 @@ This helps in comparing industry performance over time.
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-growth = df.groupby('Industry')['Job_Growth'].sum().reset_index().sort_values(by='Job_Growth', ascending=False)
-
-plt.figure(figsize=(10,6))
-sns.barplot(data=growth.head(10), x='Job_Growth', y='Industry', palette='Blues_r')
-plt.title("Top 10 Fastest Growing Industries (2024–2030)")
-plt.xlabel("Total Job Growth")
-plt.ylabel("Industry")
-plt.show()
-
-
 📍Insight: Tech, AI, and Data Science industries lead in growth, while traditional manufacturing lags.
 
 🔹 Automation Risk by Job Role
-risk = df.groupby('Job_Role')['Automation_Risk'].mean().reset_index().sort_values(by='Automation_Risk', ascending=False)
-
-plt.figure(figsize=(12,6))
-sns.barplot(data=risk.head(10), x='Automation_Risk', y='Job_Role', palette='Reds_r')
-plt.title("Top 10 Jobs with Highest Automation Risk")
-plt.xlabel("Automation Risk (%)")
-plt.ylabel("Job Role")
-plt.show()
-
 
 📍Insight: Routine-based jobs show the highest automation risk.
 
 🔹 Salary vs Automation Risk Correlation
-plt.figure(figsize=(8,6))
-sns.scatterplot(data=df, x='Automation_Risk', y='Salary', hue='Industry', alpha=0.7)
-plt.title("Salary vs Automation Risk by Industry")
-plt.xlabel("Automation Risk (%)")
-plt.ylabel("Average Salary (₹)")
-plt.show()
-
 
 📍Insight: Higher salaries are generally associated with lower automation risk roles (e.g., AI Research, Data Science).
 
 🔹 Education Level vs Average Salary
-edu_salary = df.groupby('Education_Level')['Salary'].mean().reset_index()
-
-plt.figure(figsize=(8,6))
-sns.barplot(data=edu_salary, x='Education_Level', y='Salary', palette='Greens')
-plt.title("Education Level vs Average Salary")
-plt.xlabel("Education Level")
-plt.ylabel("Average Salary (₹)")
-plt.show()
-
 
 📍Insight: Master's and PhD holders earn significantly higher salaries in AI-related jobs.
 
 🔹 Gender Diversity Across Industries
-gender = df.groupby(['Industry', 'Gender']).size().reset_index(name='Count')
-
-plt.figure(figsize=(10,6))
-sns.barplot(data=gender, x='Industry', y='Count', hue='Gender', palette='Set2')
-plt.title("Gender Diversity by Industry")
-plt.xlabel("Industry")
-plt.ylabel("Employee Count")
-plt.xticks(rotation=90)
-plt.show()
-
 
 📍Insight: Tech industries are more male-dominated, while creative and HR sectors show higher female representation.
 
 🔹 Remote Work Adoption
-remote = df['Remote_Work'].value_counts().reset_index()
-remote.columns = ['Remote_Work', 'Count']
-
-plt.figure(figsize=(6,6))
-plt.pie(remote['Count'], labels=remote['Remote_Work'], autopct='%1.1f%%', startangle=140)
-plt.title("Remote vs Onsite Roles Distribution")
-plt.show()
-
 
 📍Insight: Remote work is increasing, especially in digital and analytical sectors.
 
 🔹 Projected Job Openings by Year (2024 → 2030)
-yearly = df[['Industry', 'Job_Openings_2024', 'Projected_Openings_2030']]
-yearly = yearly.melt(id_vars=['Industry'], var_name='Year', value_name='Openings')
-
-plt.figure(figsize=(10,6))
-sns.lineplot(data=yearly, x='Year', y='Openings', hue='Industry')
-plt.title("Projected Job Openings by Industry (2024–2030)")
-plt.xlabel("Year")
-plt.ylabel("Total Openings")
-plt.show()
-
 
 📍Insight: Continuous upward trends in AI-related industries show a strong employment future.
 
