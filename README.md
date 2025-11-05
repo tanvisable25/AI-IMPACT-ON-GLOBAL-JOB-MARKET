@@ -73,18 +73,10 @@ Converted columns to proper datatypes (float, int, category).
 
 Renamed columns for better readability (e.g., Projected_Openings_2030).
 
-import pandas as pd
-
-df.info()
-
-# Handle missing values, # Clean column names
 
 📊 2. Feature Engineering
 
 We created a Job Growth column to measure how much each industry is expected to expand by 2030.
-
-df['Job_Growth'] = df['Projected_Openings_2030'] - df['Job_Openings_2024']
-
 
 This helps in comparing industry performance over time.
 
